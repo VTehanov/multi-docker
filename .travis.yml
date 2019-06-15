@@ -9,13 +9,16 @@ script:
   - docker run vasiltehanov/react-test npm test -- --coverage
 
 after_success:
+  # build docker images
   - docker build -t vasiltehanov/multi-client ./client
   - docker build -t vasiltehanov/multi-nginx ./nginx
   - docker build -t vasiltehanov/multi-server ./server
   - docker build -t vasiltehanov/multi-worker ./worker
 
+  # login to Docker
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 
+  # push images to Docker Hub
   - docker push vasiltehanov/multi-client
   - docker push vasiltehanov/multi-nginx
   - docker push vasiltehanov/multi-server
